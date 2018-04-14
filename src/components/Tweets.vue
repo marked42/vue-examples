@@ -1,6 +1,9 @@
 <template>
   <div>
-    empty tweets
+    <button @click="shuffle">shuffle</button>
+    <transition-group name="tweets" tag="div">
+      <tweet v-for="tweet in tweets" :tweet="tweet" :key="tweet.id"/>
+    </transition-group>
   </div>
 </template>
 
@@ -11,6 +14,11 @@ export default {
   name: 'tweets',
   components: {
     Tweet,
+  },
+  methods: {
+    shuffle () {
+      this.tweets = this.tweets.sort(() => Math.random() > 0.5)
+    },
   },
   data () {
     return {
@@ -44,3 +52,25 @@ export default {
   },
 }
 </script>
+
+<style>
+.test {
+  position: relative;
+  background: lightgray;
+  height: 30px;
+  width: 200px;
+}
+
+.test .fit {
+  position: absolute;
+  display: block;
+  background: lightsalmon;
+  color: red;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.tweets-move {
+  transition: transform 1s;
+}
+</style>

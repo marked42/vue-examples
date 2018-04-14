@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="bottom">
-      <input type='text' />
+      <input type='text'>
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
 .tweet-box img {
   width: 64px;
   height: 64px;

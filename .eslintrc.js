@@ -30,6 +30,11 @@ module.exports = {
       "exports": "always-multiline",
       "functions": "always-multiline",
     }],
+    "space-before-function-paren": ["error", {
+      "anonymous": "never",
+      "named": "never",
+      "asyncArrow": "always"
+  }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }

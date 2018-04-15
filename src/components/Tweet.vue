@@ -10,9 +10,7 @@
         <p class="tweet-likes">♥{{tweet.likes}}</p>
       </div>
     </div>
-    <div class="bottom">
-      <input type='text'>
-    </div>
+    <input type='text'>
   </div>
 </template>
 
@@ -28,41 +26,25 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.tweet-box img {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-}
-
-.tweet-box .top {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.tweet-box img {
-  flex: 0 0 64px;
-  margin: auto 2em;
-}
-
-.tweet-box .content {
-  flex: 1 0 200px;
-}
-
-.tweet-box .content p {
-  text-align: left;
-}
-
-.tweet-box .bottom input {
-  width: 100%;
-}
-
-.tweet-likes {
-  color: green;
-}
-
-.bottom {
-  margin-left: 2em;
-  margin-right: 2em;
-}
+.tweet-box
+  margin 2em 0
+  .top
+    display flex
+    justify-content space-around
+    align-items center
+    border solid 1px
+    img
+      width 64px
+      height 64px
+      border-radius 50%
+      flex 0 0 64px
+      margin auto 2em
+    .content
+      flex 1 0 200px
+      text-align left
+      .tweet-likes
+        color green
+  input
+    width 100%
+    box-sizing border-box
 </style>

@@ -27,7 +27,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .tweet-box img {
   width: 64px;
   height: 64px;

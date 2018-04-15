@@ -53,7 +53,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .test {
   position: relative;
   background: lightgray;

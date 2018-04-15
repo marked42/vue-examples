@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Tweets from '@/components/Tweets'
 import Watch from '@/components/Watch'
+import CenteringExample from '@/components/CenteringExample'
 
 Vue.use(Router)
 
@@ -11,7 +12,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'watch' },
+      redirect: { name: 'centering' },
       component: HelloWorld,
     },
     {
@@ -23,6 +24,11 @@ export default new Router({
       path: '/watch',
       name: 'watch',
       component: Watch,
+    },
+    {
+      path: '/centering',
+      name: 'centering',
+      component: CenteringExample,
     },
   ],
 })

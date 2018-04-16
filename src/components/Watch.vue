@@ -15,7 +15,7 @@
 <script>
 export default {
   name: 'watch',
-  data () {
+  data() {
     return {
       firstName: 'Jhon',
       lastName: 'Green',
@@ -25,17 +25,17 @@ export default {
     family: 'Royal',
   },
   methods: {
-    createWatcher () {
+    createWatcher() {
       console.log('create watcher called')
       this.$watch('firstName', () => console.log('create watcher on firstName'), { deep: true })
     },
   },
   computed: {
     fullName: {
-      get () {
+      get() {
         return `${this.firstName} - ${this.lastName}`
       },
-      set (value) {
+      set(value) {
         console.log('set computed property')
         const [first, last] = value.split('-')
         this.firstName = first

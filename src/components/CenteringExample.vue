@@ -49,7 +49,7 @@ import logo from '../assets/logo.png'
 
 export default {
   name: 'centering-example',
-  data () {
+  data() {
     return {
       logo,
     }

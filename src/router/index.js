@@ -5,6 +5,7 @@ import Tweets from '@/components/Tweets'
 import Watch from '@/components/Watch'
 import CenteringExample from '@/components/CenteringExample'
 import BoxModelExample from '@/components/BoxModelExample'
+import PropsWrapper from '@/components/Vue/PropsWrapper'
 
 Vue.use(Router)
 
@@ -13,7 +14,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'BoxModelExample' },
+      redirect: { name: 'PropsWrapper' },
       component: HelloWorld,
     },
     {
@@ -35,6 +36,11 @@ export default new Router({
       path: '/box',
       name: 'BoxModelExample',
       component: BoxModelExample,
+    },
+    {
+      path: '/props',
+      name: 'PropsWrapper',
+      component: PropsWrapper,
     },
   ],
 })

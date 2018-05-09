@@ -6,6 +6,7 @@ import Watch from '@/components/Watch'
 import CenteringExample from '@/components/CenteringExample'
 import BoxModelExample from '@/components/BoxModelExample'
 import PropsWrapper from '@/components/Vue/PropsWrapper'
+import OverwatchLoading from '@/components/OverwatchLoading'
 
 Vue.use(Router)
 
@@ -14,7 +15,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'PropsWrapper' },
+      redirect: { name: 'OverwatchLoading' },
       component: HelloWorld,
     },
     {
@@ -41,6 +42,11 @@ export default new Router({
       path: '/props',
       name: 'PropsWrapper',
       component: PropsWrapper,
+    },
+    {
+      path: '/overwatch_loading',
+      name: 'OverwatchLoading',
+      component: OverwatchLoading,
     },
   ],
 })

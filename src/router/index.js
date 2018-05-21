@@ -50,9 +50,15 @@ export default new Router({
       component: PropsWrapper,
     },
     {
+<<<<<<< HEAD
       path: '/watch_computed',
       name: 'WatchComputed',
       component: WatchComputed,
+=======
+      path: '/overwatch_loading',
+      name: 'OverwatchLoading',
+      component: OverwatchLoading,
+>>>>>>> overwatch-loading-back
     },
   ],
 })

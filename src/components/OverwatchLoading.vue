@@ -1,14 +1,14 @@
 <template>
   <div class="loader">
-    <ul class="hexagon-container">
-      <li class="hexagon hex1"></li>
-      <li class="hexagon hex2"></li>
-      <li class="hexagon hex3"></li>
-      <li class="hexagon hex4"></li>
-      <li class="hexagon hex5"></li>
-      <li class="hexagon hex6"></li>
-      <li class="hexagon hex7"></li>
-    </ul>
+    <div class="hexagon-container">
+      <div class="hexagon hex1"></div>
+      <div class="hexagon hex2"></div>
+      <div class="hexagon hex3"></div>
+      <div class="hexagon hex4"></div>
+      <div class="hexagon hex5"></div>
+      <div class="hexagon hex6"></div>
+      <div class="hexagon hex7"></div>
+    </div>
   </div>
 </template>
 
@@ -63,9 +63,10 @@ $border_width = 2px
     position relative
     top 33px
     left 41px
+    height 100%
+    border-radius 50%
     .hexagon
       position absolute
-      list-style-type none
       width 40px
       height 23px
       background-color #556C82
@@ -92,8 +93,11 @@ $border_width = 2px
     positions = (1 0px 0px) (2 0px 42px) (3 36px 63px) (4 72px 42px) (5 72px 0px) (6 36px -21px) (7 36px 21px)
     for p in positions
       .hex{p[0]}
+        duration = 3s
         top p[1]
         left p[2]
+        animation Animasearch duration ease-in-out infinite
+        animation-delay duration * (p[0] / 14)
 
 @keyframes rotate1 {
   0% {
@@ -121,6 +125,22 @@ $border_width = 2px
   100% {
     transform: rotate(360deg);
     clip: rect(0px, 35px, 35px, 0px);
+  }
+}
+
+@keyframes Animasearch {
+  0% {
+    transform scale(1)
+    opacity 1
+  }
+  15%
+  50% {
+    transform scale(0.5)
+    opacity 0
+  }
+  65% {
+    transform scale(1)
+    opacity 1
   }
 }
 

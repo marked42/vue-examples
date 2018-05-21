@@ -7,6 +7,7 @@ import CenteringExample from '@/components/CenteringExample'
 import BoxModelExample from '@/components/BoxModelExample'
 import PropsWrapper from '@/components/Vue/PropsWrapper'
 import WatchComputed from '@/components/Vue/WatchComputed'
+import WordBreak from '@/components/WordBreak'
 
 Vue.use(Router)
 
@@ -15,8 +16,13 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'WatchComputed' },
+      redirect: { name: 'WordBreak' },
       component: HelloWorld,
+    },
+    {
+      path: '/word_break',
+      name: 'WordBreak',
+      component: WordBreak,
     },
     {
       path: '/tweets',

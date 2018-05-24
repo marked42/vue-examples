@@ -8,6 +8,7 @@ import BoxModelExample from '@/components/BoxModelExample'
 import PropsWrapper from '@/components/Vue/PropsWrapper'
 import WatchComputed from '@/components/Vue/WatchComputed'
 import WordBreak from '@/components/WordBreak'
+import TouchEvents from '@/components/TouchEvents'
 
 Vue.use(Router)
 
@@ -16,7 +17,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'WordBreak' },
+      redirect: { name: 'TouchEvents' },
       component: HelloWorld,
     },
     {
@@ -50,15 +51,14 @@ export default new Router({
       component: PropsWrapper,
     },
     {
-<<<<<<< HEAD
       path: '/watch_computed',
       name: 'WatchComputed',
       component: WatchComputed,
-=======
-      path: '/overwatch_loading',
-      name: 'OverwatchLoading',
-      component: OverwatchLoading,
->>>>>>> overwatch-loading-back
+    },
+    {
+      path: '/touch_events',
+      name: 'TouchEvents',
+      component: TouchEvents,
     },
   ],
 })

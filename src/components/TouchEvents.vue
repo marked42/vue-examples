@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>'touch' &amp; 'wheel' event</h2>
+  <div id="root">
+    <h2>'wheel' events</h2>
     <p>
       Finger touching and moving on track pad triggers 'wheel' event instead of 'touchmove' event.
       'mousewheel' event is depracted version of 'wheel' event.
@@ -31,6 +31,10 @@
       <div class="child">
         {{ `wheel: ${ counters.wheelPrevented } `}}
       </div>
+    </div>
+    <h2>'touch' events</h2>
+    <div id="touchable" ref="touchable">
+      This element is touchable
     </div>
   </div>
 </template>
@@ -76,12 +80,32 @@ export default {
         this.counters.wheelPrevented++
         e.preventDefault()
       }, { passive: false })
+
+      // touchable - touchstart
+      this.$refs.touchable.addEventListener('touchstart', (e) => {
+        if (e.touches.item(0) === e.targetToches.item(0)) {
+          this.$refs.touchable.appendChild(document.createTextNode('Hello Touch Events'))
+        } else if (e.touches.length === e.targetTouches.length) {
+          this.$refs.touchable.appendChild(document.createTextNode('All touch points on target element'))
+        } else if (e.touches.length > 1) {
+          this.$refs.touchable.appendChild(document.createTextNode('support multiple touches'))
+        }
+      }, false)
+
+      // touchable - touchend
+      this.$refs.touchable.addEventListener('touchend', (e) => {
+        this.$refs.touchable.appendChild(document.createTextNode(`Touch points removed: ${e.changedTouches.length}`))
+        this.$refs.touchable.appendChild(document.createTextNode(`Touch points remaining on element: ${e.targetTouches.length}`))
+        this.$refs.touchable.appendChild(document.createTextNode(`Touch points remaining on document: ${e.touches.length}`))
+      })
     })
   },
 }
 </script>
 
 <style lang="stylus" scoped>
+#root
+  counter-reset chapter_counter 1
 p
   text-align left
 .parent
@@ -89,11 +113,24 @@ p
   overflow-y scroll
   border 1px solid black
   margin 10px 0
+  position relative
   &:before
-    content counter()
+    display inline-block
+    position absolute
+    background lightblue
+    content counter(chapter_counter)
+    counter-increment chapter_counter 1
+    padding 3px
+    width 20px
+    height 20px
+    left 0
+    text-align center
   .child
     border 1px solid black
     height 600px
     margin 10px
     background lightgray
+#touchable
+  height 400px
+  border 1px solid black
 </style>

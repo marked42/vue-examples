@@ -9,6 +9,7 @@ import PropsWrapper from '@/components/Vue/PropsWrapper'
 import WatchComputed from '@/components/Vue/WatchComputed'
 import WordBreak from '@/components/WordBreak'
 import TouchEvents from '@/components/TouchEvents'
+import CssCounters from '@/components/CssCounters'
 
 Vue.use(Router)
 
@@ -17,7 +18,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'TouchEvents' },
+      redirect: { name: 'CssCounters' },
       component: HelloWorld,
     },
     {
@@ -59,6 +60,11 @@ export default new Router({
       path: '/touch_events',
       name: 'TouchEvents',
       component: TouchEvents,
+    },
+    {
+      path: '/css_counters',
+      name: 'CssCounters',
+      component: CssCounters,
     },
   ],
 })

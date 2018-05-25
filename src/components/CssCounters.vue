@@ -151,7 +151,7 @@ li
       margin-left 30px
       &:before
         counter-increment item 1
-        content counters(item, ".") " "
+        content counters(item, ".", test) " "
         color blue
       &.reset-item
         counter-reset item 0

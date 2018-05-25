@@ -1,33 +1,9 @@
-const Counter = {
-  counters: {},
-  child: [],
-}
-
-const CounterReset = {
-  name: '',
-  value: 0,
-}
-
-const CounterSet = {
-  name: '',
-  value: 0,
-}
-
-const CounterIncrement = {
-  name: '',
-  value: 1,
-}
-
-const CounterOperation = {
-  inherit: {},
-  reset: [],
-  set: [],
-  increment: [],
-}
-
-const CounterResetDefaultValue = 0
-const CounterSetDefaultValue = CounterResetDefaultValue
-const CounterIncrementDefaultValue = 1
+// refer to spec https://drafts.csswg.org/css-lists-3/#auto-numbering
+import {
+  counterStyles,
+  generateCounterRepresentation,
+  COUNTER_STRING_STYLE_NONE,
+} from './counterStyles'
 
 function convertToArray(value) {
   if (Array.isArray(value)) {
@@ -43,22 +19,26 @@ export function processCounters(operations) {
   }
 
   const {
-    inherit = {},
+    parent = {},
     resets = [],
     sets = [],
     increments = [],
   } = operations
 
   // inherit
-  const counters = { ...inherit }
+  const counters = { ...parent }
 
   processCountersResets(counters, resets)
   processCountersSets(counters, sets)
   processCountersIncrements(counters, increments)
+
+  return counters
 }
 
-function processCountersResets(counters, resets) {
+export function processCountersResets(counters, resets) {
   resets = convertToArray(resets)
+
+  const CounterResetDefaultValue = 0
 
   for (let i = 0; i < resets.length; i++) {
     const reset = resets[i]
@@ -85,8 +65,10 @@ function checkCounterNameAndValue(name, value) {
   return typeof name === 'string' && Number.isInteger(value)
 }
 
-function processCountersSets(counters, sets) {
+export function processCountersSets(counters, sets) {
   sets = convertToArray(sets)
+
+  const CounterSetDefaultValue = 0
 
   for (let i = 0; i < sets.length; i++) {
     const set = sets[i]
@@ -108,10 +90,14 @@ function processCountersSets(counters, sets) {
       console.error(`counters[${name}] should be undefined or Array, instead is ${counters[name]}`)
     }
   }
+
+  return counters
 }
 
-function processCountersIncrements(counters, increments) {
+export function processCountersIncrements(counters, increments) {
   increments = convertToArray(increments)
+
+  const CounterIncrementDefaultValue = 1
 
   for (let i = 0; i < increments.length; i++) {
     const increment = increments[i]
@@ -133,22 +119,8 @@ function processCountersIncrements(counters, increments) {
       console.error(`counters[${name}] should be undefined or Array, instead is ${counters[name]}`)
     }
   }
-}
 
-const CounterStyles = {
-  none: 0,
-  decimal: 1,
-}
-
-const COUNTER_STRING_STYLE_NONE = ''
-
-function generateCounterRepresentation(value, style = CounterStyles.decimal) {
-  // check for style support
-  if (!Number.isInteger(value)) {
-    value = Math.floor(Number(value))
-  }
-
-  return String(value)
+  return counters
 }
 
 export function getInnermostCounterValue(counters, name) {
@@ -176,7 +148,7 @@ export function getNestedCounterValue(counters, name) {
 }
 
 export function getCounterString(counters, name, style) {
-  if (style === CounterStyles.none) {
+  if (style === counterStyles.none) {
     return COUNTER_STRING_STYLE_NONE
   }
 
@@ -185,8 +157,26 @@ export function getCounterString(counters, name, style) {
   return generateCounterRepresentation(counterValue, style)
 }
 
+/**
+ * when style is not supported, the spec says implementation should fallback to decimal
+ * style.
+ *
+ * 1. Firefox considers counters() function with unsupported style as valid, and follows
+ *    the spec. So counters [1, 2, 3] would generate '1.2.3'.
+ * 2. Chrome considers counters() function with unsupported style as invalid, and this rule
+ *    is ignored, so result is an empty string.
+ * 3. This implementation follows the spec, refer to  CSS Counter Styles Level 3
+ *    https://drafts.csswg.org/css-counter-styles-3/#generate-a-counter.
+ *
+ * @export
+ * @param {any} counters
+ * @param {any} name
+ * @param {any} delimiter
+ * @param {any} style,
+ * @returns modified counters
+ */
 export function getCountersString(counters, name, delimiter, style) {
-  if (style === CounterStyles.none) {
+  if (style === counterStyles.none) {
     return COUNTER_STRING_STYLE_NONE
   }
 

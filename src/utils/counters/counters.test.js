@@ -17,7 +17,7 @@ describe('processCounters', () => {
 
   it('should process counters correctly', () => {
     const operations = {
-      parent: {
+      inherits: {
         test: [1, 2],
       },
       resets: [

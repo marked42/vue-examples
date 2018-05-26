@@ -19,14 +19,14 @@ export function processCounters(operations) {
   }
 
   const {
-    parent = {},
+    inherits = {},
     resets = [],
     sets = [],
     increments = [],
   } = operations
 
   // inherit
-  const counters = { ...parent }
+  const counters = { ...inherits }
 
   processCountersResets(counters, resets)
   processCountersSets(counters, sets)

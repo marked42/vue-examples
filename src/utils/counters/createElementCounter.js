@@ -1,14 +1,6 @@
 import {
-  processCounters
+  processCounters,
 } from './counters'
-
-export default class ElementCounter {
-  constructor({parent, counters, children}) {
-    this.parent = parent
-    this.counters = {}
-    this.children = []
-  }
-}
 
 export function findLastElementInDocumentOrder(tree) {
   if (!tree) {
@@ -42,7 +34,7 @@ export function isCountersValid(counterByName, counterByValue) {
     return false
   }
 
-  for (let i = 0; i < counterByName.length; i++) {
+  for (let i = 0; i < counterByName.length - 1; i++) {
     // counterByValue is shorter or values are not equal
     if (counterByName[i] !== counterByValue[i]) {
       return false
@@ -75,43 +67,28 @@ export function mergeInheritedCounters(countersByName = {}, countersByValue = {}
   return result
 }
 
-export function createElementCounter(config) {
-  config = {
-    resets: [{ name: 'test1', value: 0 }, { name: 'test2', value: 1 }],
-    sets: [{ name: 'test2', value: 2 }, { name: 'test3', value: 3 }],
-    increments: [{ name: 'test3', value: 4 }, { name: 'test4', value: 5 }],
-    children: [
-      {
-        resets: [{ name: 'test1', value: 0 }, { name: 'test2', value: 1 }],
-        sets: [{ name: 'test2', value: 2 }, { name: 'test3', value: 3 }],
-        increments: [{ name: 'test3', value: 4 }, { name: 'test4', value: 5 }],
-      },
-      {
-        resets: [{ name: 'test1', value: 0 }, { name: 'test2', value: 1 }],
-        sets: [{ name: 'test2', value: 2 }, { name: 'test3', value: 3 }],
-        increments: [{ name: 'test3', value: 4 }, { name: 'test4', value: 5 }],
-      }
-    ]
-  }
-
+export default function createElementCounter(config) {
   const {
     inherits = {},
+    fromParent = true,
     resets = [],
     sets = [],
     increments = [],
     children = [],
   } = config
 
-  const operations = { inherits, resets, sets, increments }
+  const operations = { inherits, fromParent, resets, sets, increments }
 
   const parentCounters = processCounters(operations)
-  const parentNestedCounters = { counters, children: [] }
+  const parentNestedCounters = { counters: parentCounters, children: [] }
 
   for (let i = 0; i < children.length; i++) {
     const child = children[i]
 
     let countersToInherit
-    if (i === 0) {
+    const inheritsFromParent = i === 0
+
+    if (inheritsFromParent) {
       countersToInherit = parentCounters
     } else {
       // inherit counter names from previous sibling
@@ -122,7 +99,7 @@ export function createElementCounter(config) {
       countersToInherit = mergeInheritedCounters(previousSibling.counters, previousElementInDocumentOrder.counters)
     }
 
-    const childConfig = { ...child , inherits: countersToInherit, }
+    const childConfig = { ...child, fromParent: inheritsFromParent, inherits: countersToInherit }
 
     const childNestedCounters = createElementCounter(childConfig)
 

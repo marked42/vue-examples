@@ -5,6 +5,8 @@ import {
   COUNTER_STRING_STYLE_NONE,
 } from './counterStyles'
 
+import deepClone from '../deepClone'
+
 function convertToArray(value) {
   if (Array.isArray(value)) {
     return value
@@ -20,45 +22,52 @@ export function processCounters(operations) {
 
   const {
     inherits = {},
+    fromParent = true,
     resets = [],
     sets = [],
     increments = [],
   } = operations
 
   // inherit
-  const counters = { ...inherits }
+  let counters = deepClone(inherits)
 
-  processCountersResets(counters, resets)
-  processCountersSets(counters, sets)
-  processCountersIncrements(counters, increments)
+  counters = processCountersResets(counters, resets, fromParent)
+  counters = processCountersSets(counters, sets)
+  counters = processCountersIncrements(counters, increments)
 
   return counters
 }
 
-export function processCountersResets(counters, resets) {
-  resets = convertToArray(resets)
+export function processCountersResets(counters, resets, fromParent = true) {
+  const counters_ = deepClone(counters)
+  const resets_ = convertToArray(resets)
 
-  const CounterResetDefaultValue = 0
+  const RESET_DEFAULT_VALUE = 0
 
-  for (let i = 0; i < resets.length; i++) {
-    const reset = resets[i]
-    const { name, value = CounterResetDefaultValue } = reset
+  for (let i = 0; i < resets_.length; i++) {
+    const reset = resets_[i]
+    const { name, value = RESET_DEFAULT_VALUE } = reset
 
     if (!checkCounterNameAndValue(name, value)) {
       console.error(`reset should have name and value property, instead is ${JSON.stringify(reset)}`)
       continue
     }
 
-    if (counters[name] === undefined) {
-      counters[name] = [value]
-    } else if (Array.isArray(counters[name])) {
-      counters[name].push(value)
+    if (counters_[name] === undefined) {
+      counters_[name] = [value]
+    } else if (Array.isArray(counters_[name])) {
+      if (fromParent) {
+        counters_[name].push(value)
+      } else {
+        const length = counters_[name].length
+        counters_[name][length - 1] = value
+      }
     } else {
-      console.error(`counters[${name}] should be undefined or Array, instead is ${counters[name]}`)
+      console.error(`counters[${name}] should be undefined or Array, instead is ${counters_[name]}`)
     }
   }
 
-  return counters
+  return counters_
 }
 
 function checkCounterNameAndValue(name, value) {
@@ -66,61 +75,63 @@ function checkCounterNameAndValue(name, value) {
 }
 
 export function processCountersSets(counters, sets) {
-  sets = convertToArray(sets)
+  const counters_ = deepClone(counters)
+  const sets_ = convertToArray(sets)
 
-  const CounterSetDefaultValue = 0
+  const SET_DEFAULT_VALUE = 0
 
-  for (let i = 0; i < sets.length; i++) {
-    const set = sets[i]
-    const { name, value = CounterSetDefaultValue } = set
+  for (let i = 0; i < sets_.length; i++) {
+    const set = sets_[i]
+    const { name, value = SET_DEFAULT_VALUE } = set
 
     if (!checkCounterNameAndValue(name, value)) {
       console.error(`set should have name and value property, instead is ${JSON.stringify(set)}`)
       continue
     }
 
-    if (counters[name] === undefined) {
+    if (counters_[name] === undefined) {
       // create new one if counter of name doesn't exist
-      counters[name] = [value]
-    } else if (Array.isArray(counters[name]) && counters[name].length > 0) {
-      const nestedCounterArray = counters[name]
+      counters_[name] = [value]
+    } else if (Array.isArray(counters_[name]) && counters_[name].length > 0) {
+      const nestedCounterArray = counters_[name]
 
       nestedCounterArray[nestedCounterArray.length - 1] = value
     } else {
-      console.error(`counters[${name}] should be undefined or Array, instead is ${counters[name]}`)
+      console.error(`counters[${name}] should be undefined or Array, instead is ${counters_[name]}`)
     }
   }
 
-  return counters
+  return counters_
 }
 
 export function processCountersIncrements(counters, increments) {
-  increments = convertToArray(increments)
+  const counters_ = deepClone(counters)
+  const increments_ = convertToArray(increments)
 
-  const CounterIncrementDefaultValue = 1
+  const INCREMENT_DEFAULT_VALUE = 1
 
-  for (let i = 0; i < increments.length; i++) {
-    const increment = increments[i]
-    const { name, value = CounterIncrementDefaultValue } = increment
+  for (let i = 0; i < increments_.length; i++) {
+    const increment = increments_[i]
+    const { name, value = INCREMENT_DEFAULT_VALUE } = increment
 
     if (!checkCounterNameAndValue(name, value)) {
-      console.error(`set should have name and value property, instead is ${JSON.stringify(set)}`)
+      console.error(`increment should have name and value property, instead is ${JSON.stringify(increment)}`)
       continue
     }
 
-    if (counters[name] === undefined) {
+    if (counters_[name] === undefined) {
       // create new one if counter of name doesn't exist
-      counters[name] = [value]
-    } else if (Array.isArray(counters[name]) && counters[name].length > 0) {
-      const nestedCounterArray = counters[name]
+      counters_[name] = [value]
+    } else if (Array.isArray(counters_[name]) && counters_[name].length > 0) {
+      const nestedCounterArray = counters_[name]
 
       nestedCounterArray[nestedCounterArray.length - 1] += value
     } else {
-      console.error(`counters[${name}] should be undefined or Array, instead is ${counters[name]}`)
+      console.error(`counters[${name}] should be undefined or Array, instead is ${counters_[name]}`)
     }
   }
 
-  return counters
+  return counters_
 }
 
 export function getInnermostCounterValue(counters, name) {

@@ -3,10 +3,13 @@ import {
   processCountersResets,
   processCountersSets,
   processCountersIncrements,
+  processCountersUsage,
   getInnermostCounterValue,
   getNestedCounterValue,
   getCounterString,
   getCountersString,
+  generateCounterCssRuleByType,
+  generateCounterAllCssRule,
 } from './counters'
 import { counterStyles } from './counterStyles'
 
@@ -215,6 +218,39 @@ describe('processCountersIncrements', () => {
   })
 })
 
+describe('processCountersUsage', () => {
+  it('should not create new counters if counter with specified name already exist', () => {
+    const counters = { test: [1] }
+
+    const result = processCountersUsage(counters, {
+      counter: [ { name: 'test', style: counterStyles.none } ],
+    })
+
+    expect(result).toEqual({ test: [1] })
+  })
+
+  it("should create new counter with 0 as default value when it doesn't exist and is used", () => {
+    const counters = { test: [1] }
+
+    const result = processCountersUsage(counters, {
+      counter: [ { name: 'test2', style: counterStyles.none }, { name: 'test3', style: counterStyles.none } ],
+    })
+
+    expect(result).toEqual({ test: [1], test2: [0], test3: [0] })
+  })
+
+  it("should create new counter with 0 as default value when it doesn't exist and is used", () => {
+    const counters = { test: [1] }
+
+    const result = processCountersUsage(counters, {
+      counter: [ { name: 'test2', style: counterStyles.none }, { name: 'test3', style: counterStyles.none } ],
+      counters: [ { name: 'test4', style: counterStyles.decimal }, { name: 'test5', style: counterStyles.none } ],
+    })
+
+    expect(result).toEqual({ test: [1], test2: [0], test3: [0], test4: [0], test5: [0] })
+  })
+})
+
 describe('getInnermostCounterValue', () => {
   it('should get innermost counter value of specified name', () => {
     const counters = { test: [1, 2] }
@@ -297,5 +333,50 @@ describe('getCountersString', () => {
   })
 })
 
-describe('processCounters', () => {
+describe('generateCounterCssRule', () => {
+  it('should generate counter css rule using keyword none when config is invalid or empty', () => {
+    const configs = [ undefined, {} ]
+    const counterActionTypes = [ 'counter-reset', 'counter-set', 'counter-increment' ]
+
+    expect(generateCounterCssRuleByType('counter-reset', undefined)).toEqual('counter-reset: none;')
+    expect(generateCounterCssRuleByType('counter-reset', {})).toEqual('counter-reset: none;')
+    expect(generateCounterCssRuleByType('counter-set', undefined)).toEqual('counter-set: none;')
+    expect(generateCounterCssRuleByType('counter-set', {})).toEqual('counter-set: none;')
+    expect(generateCounterCssRuleByType('counter-increment', undefined)).toEqual('counter-increment: none;')
+    expect(generateCounterCssRuleByType('counter-increment', {})).toEqual('counter-increment: none;')
+  })
+
+  it('should generate counter css rule correctly', () => {
+    const config = [
+      { name: 'test1', value: 0 },
+      { name: 'test2', value: undefined },
+      { name: 'test3', value: NaN },
+    ]
+
+    expect(generateCounterCssRuleByType('counter-reset', config)).toEqual('counter-reset: test1 0 test2 test3;')
+    expect(generateCounterCssRuleByType('counter-set', config)).toEqual('counter-set: test1 0 test2 test3;')
+    expect(generateCounterCssRuleByType('counter-increment', config)).toEqual('counter-increment: test1 0 test2 test3;')
+  })
+})
+
+describe('generateCounterAllCssRule', () => {
+  it('should generate counter all css rules using none keyword when config is empty', () => {
+    const config = {
+      resets: [],
+      sets: [],
+      increments: [],
+    }
+
+    expect(generateCounterAllCssRule(config)).toEqual(`counter-reset: none;\ncounter-set: none;\ncounter-increment: none;`)
+  })
+
+  it('should generate counter all css rules correctly', () => {
+    const config = {
+      resets: [ {name: 'test1', value: 1}, {name: 'test2', value: undefined} ],
+      sets: [ {name: 'test3', value: NaN}, {name: 'test4', value: 4} ],
+      increments: [ {name: 'test5', value: 5}, {name: 'test6', value: Infinity} ],
+    }
+
+    expect(generateCounterAllCssRule(config)).toEqual(`counter-reset: test1 1 test2;\ncounter-set: test3 test4 4;\ncounter-increment: test5 5 test6;`)
+  })
 })

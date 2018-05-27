@@ -3,6 +3,10 @@ import {
   getCountersString,
   getInnermostCounterValue,
   getNestedCounterValue,
+  generateCounterResetCssRule,
+  generateCounterSetCssRule,
+  generateCounterIncrementCssRule,
+  generateCounterAllCssRule,
 } from './counters'
 
 import {
@@ -18,6 +22,10 @@ export {
   getInnermostCounterValue,
   getNestedCounterValue,
   counterStyles,
-  generateCounterRepresentation,
   createElementCounter,
+  generateCounterRepresentation,
+  generateCounterAllCssRule,
+  generateCounterResetCssRule,
+  generateCounterSetCssRule,
+  generateCounterIncrementCssRule,
 }

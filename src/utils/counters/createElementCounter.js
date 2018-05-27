@@ -67,20 +67,33 @@ export function mergeInheritedCounters(countersByName = {}, countersByValue = {}
   return result
 }
 
-export default function createElementCounter(config) {
+export default function createElementCounter(config, keepConfig = false) {
   const {
     inherits = {},
     fromParent = true,
     resets = [],
     sets = [],
     increments = [],
+    usage = {
+      counter: [],
+      counters: [],
+    },
     children = [],
   } = config
 
-  const operations = { inherits, fromParent, resets, sets, increments }
+  const operations = { inherits, fromParent, resets, sets, increments, usage }
 
   const parentCounters = processCounters(operations)
-  const parentNestedCounters = { counters: parentCounters, children: [] }
+  const parentNestedCounters = keepConfig ? {
+    inherits,
+    fromParent,
+    resets,
+    sets,
+    increments,
+    usage,
+    counters: parentCounters,
+    children: [],
+  } : { counters: parentCounters, children: [] }
 
   for (let i = 0; i < children.length; i++) {
     const child = children[i]
@@ -101,7 +114,7 @@ export default function createElementCounter(config) {
 
     const childConfig = { ...child, fromParent: inheritsFromParent, inherits: countersToInherit }
 
-    const childNestedCounters = createElementCounter(childConfig)
+    const childNestedCounters = createElementCounter(childConfig, keepConfig)
 
     parentNestedCounters.children.push(childNestedCounters)
   }

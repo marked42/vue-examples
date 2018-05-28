@@ -1,11 +1,12 @@
 
 export const counterStyles = {
-  none: 0,
-  decimal: 1,
+  none: 'none',
+  decimal: 'decimal',
 }
 
 export const COUNTER_STRING_STYLE_NONE = ''
 
+// TODO: add more counter style support
 export function generateCounterRepresentation(value, style = counterStyles.decimal) {
   // check for style support
   if (!Number.isInteger(value)) {

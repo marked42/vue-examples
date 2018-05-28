@@ -1,6 +1,7 @@
 <template>
   <div style='text-align: left;'>
     <h2>Nested Counters Example</h2>
+    kesjtlksj
     <nested-counters v-bind="counters1">
     </nested-counters>
     <h2>

@@ -10,7 +10,7 @@ import WatchComputed from '@/components/Vue/WatchComputed'
 import WordBreak from '@/components/WordBreak'
 import TouchEvents from '@/components/TouchEvents'
 import CssCounters from '@/components/CssCounters'
-import KosSelect from '@/components/kos/Select'
+import KosSelect from '@/components/Kos/Select'
 
 Vue.use(Router)
 

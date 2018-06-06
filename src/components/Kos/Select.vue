@@ -8,6 +8,7 @@
 </template>
 
 <script>
+// pseduo element before, after cannot be used on input element to expand its interactive area
 export default {
   name: 'kos-select',
 }

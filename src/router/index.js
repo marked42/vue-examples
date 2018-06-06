@@ -10,6 +10,7 @@ import WatchComputed from '@/components/Vue/WatchComputed'
 import WordBreak from '@/components/WordBreak'
 import TouchEvents from '@/components/TouchEvents'
 import CssCounters from '@/components/CssCounters'
+import AlignCenter from '@/components/AlignCenter'
 
 Vue.use(Router)
 
@@ -18,7 +19,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'CssCounters' },
+      redirect: { name: 'AlignCenter' },
       component: HelloWorld,
     },
     {
@@ -65,6 +66,11 @@ export default new Router({
       path: '/css_counters',
       name: 'CssCounters',
       component: CssCounters,
+    },
+    {
+      path: '/align_center',
+      name: 'AlignCenter',
+      component: AlignCenter,
     },
   ],
 })

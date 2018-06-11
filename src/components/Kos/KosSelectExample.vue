@@ -8,6 +8,10 @@
       <h3>async list</h3>
       <kos-select :items="items" :async-items="asyncItems"></kos-select>
     </div>
+    <div>
+      <h3>multiple selection list</h3>
+      <kos-select :items="items" :multiple-selection="true"></kos-select>
+    </div>
   </div>
 </template>
 

@@ -1,11 +1,30 @@
 <template>
   <div class="kos-select">
     <input
+      v-if="!multipleSelection"
       v-model="inputModel"
       class="kos-select-input"
       @focus="handleInputFocus"
       @blur="handleInputBlur"
     >
+    <div
+      v-else
+      class="kos-select-tags-box"
+    >
+      <div
+        v-for="(item, index) in selectedItems"
+        :key="item.label"
+        class="kos-select-tag"
+      >
+        {{item.label}}
+        <span
+          @click="deselectItem(index)"
+          class="kos-select-tag-remove-icon"
+        >x</span>
+      </div>
+      <input @focus="handleInputFocus" @blur="handleInputBlur">
+      <div class="input">s</div>
+    </div>
     <div
       v-if="listType === listTypes.FETCHING"
       class="kos-select-list-fetching"
@@ -24,6 +43,7 @@
       v-model="selectedItemIndexes"
       :items="listItems"
       class="kos-select-list"
+      :multiple-selection="multipleSelection"
     >
       <div slot="empty">
         <slot name="empty">
@@ -162,6 +182,9 @@ export default {
     handleInputBlur() {
       this.inputFocused = false
     },
+    deselectItem(index) {
+      this.selectedItemIndexes.splice(index, 1)
+    },
   },
   created() {
     if (this.useAsyncItems) {
@@ -195,4 +218,34 @@ export default {
     border 1px solid #ccc
   .kos-select-list-error
     border-color red
+  .kos-select-tags-box
+    display inline-block
+    width 100%
+    height auto
+    padding 2px 4px
+    text-align left
+    border-radius 4px
+    box-sizing border-box
+    border 1px solid black
+    vertical-align middle
+    .kos-select-tag
+      display inline-block
+      border 1px solid black
+      border-radius 2px
+      margin 0 3px 0 0
+      padding 3px
+      &:last-child
+        margin 0
+      .kos-select-tag-remove-icon
+        // display inline-block
+        cursor pointer
+    input
+    .input
+      display inline-block
+      max-width 100%
+      width 30px
+      height 20px
+      border none
+      &:focus
+        outline none
 </style>

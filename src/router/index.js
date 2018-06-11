@@ -11,6 +11,7 @@ import WordBreak from '@/components/WordBreak'
 import TouchEvents from '@/components/TouchEvents'
 import CssCounters from '@/components/CssCounters'
 import KosListExample from '@/components/Kos/KosListExample'
+import KosSelectExample from '@/components/Kos/KosSelectExample'
 
 Vue.use(Router)
 
@@ -19,7 +20,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'KosListExample' },
+      redirect: { name: 'KosSelectExample' },
       component: HelloWorld,
     },
     {
@@ -80,6 +81,11 @@ export default new Router({
       //     component: KosListExample,
       //   },
       // ],
+    },
+    {
+      path: '/components/examples/kos_select',
+      name: 'KosSelectExample',
+      component: KosSelectExample,
     },
   ],
 })

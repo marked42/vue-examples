@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { listItemsValidator } from './listUtils'
+
 export default {
   name: 'kos-list',
   props: {
@@ -44,17 +46,7 @@ export default {
       default() {
         return []
       },
-      validator(items) {
-        if (!Array.isArray(items)) {
-          return false
-        }
-
-        function isItemValid(item) {
-          return item !== null && typeof item === 'object' && typeof item.label === 'string' && item.value
-        }
-
-        return items.every(item => isItemValid(item))
-      },
+      validator: listItemsValidator,
     },
     multipleSelection: {
       type: Boolean,

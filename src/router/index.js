@@ -10,6 +10,7 @@ import WatchComputed from '@/components/Vue/WatchComputed'
 import WordBreak from '@/components/WordBreak'
 import TouchEvents from '@/components/TouchEvents'
 import CssCounters from '@/components/CssCounters'
+import KosListExample from '@/components/Kos/KosListExample'
 
 Vue.use(Router)
 
@@ -18,7 +19,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'CssCounters' },
+      redirect: { name: 'KosListExample' },
       component: HelloWorld,
     },
     {
@@ -65,6 +66,20 @@ export default new Router({
       path: '/css_counters',
       name: 'CssCounters',
       component: CssCounters,
+    },
+    {
+      path: '/components/examples/kos_list',
+      name: 'KosListExample',
+      component: KosListExample,
+      // path: '/components/examples',
+      // TODO: children doesn't match ?
+      // children: [
+      //   {
+      //     path: 'kos_list',
+      //     name: 'KosListExample',
+      //     component: KosListExample,
+      //   },
+      // ],
     },
   ],
 })

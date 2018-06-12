@@ -1,15 +1,16 @@
 <template>
   <div class="kos-select">
+    <!-- kos-select-input -->
     <input
       v-if="!multipleSelection"
       v-model="inputModel"
-      class="kos-select-input"
+      :class="selectInputSingleClass"
       @focus="handleInputFocus"
       @blur="handleInputBlur"
     >
     <div
       v-else
-      class="kos-select-tags-box"
+      :class="selectInputTagsBoxClass"
     >
       <div
         v-for="(item, index) in selectedItems"
@@ -20,20 +21,23 @@
         <span
           @click="deselectItem(index)"
           class="kos-select-tag-remove-icon"
-        >x</span>
+        >×</span>
       </div>
       <input @focus="handleInputFocus" @blur="handleInputBlur">
-      <div class="input">s</div>
     </div>
+
+    <!-- kos-select-list -->
     <div
       v-if="listType === listTypes.FETCHING"
-      class="kos-select-list-fetching"
+      v-show="inputFocused"
+      :class="['kos-select-list', 'kos-select-list-fetching']"
     >
       fetching...
     </div>
     <div
       v-else-if="listType === listTypes.ERROR"
-      class="kos-select-list-error"
+      v-show="inputFocused"
+      :class="['kos-select-list', 'kos-select-list-error']"
     >
       {{stateErrorMessage}}
     </div>
@@ -118,6 +122,20 @@ export default {
         this.input = value
       },
     },
+    selectInputSingleClass() {
+      return {
+        'kos-select-input': true,
+        'kos-select-input-single': true,
+        'kos-select-input-focused': this.inputFocused,
+      }
+    },
+    selectInputTagsBoxClass() {
+      return {
+        'kos-select-input': true,
+        'kos-select-input-multiple': true,
+        'kos-select-input-focused': this.inputFocused,
+      }
+    },
     selectedItem() {
       const defaultItem = { label: '', value: undefined }
 
@@ -196,56 +214,97 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.kos-select
-  position relative
-  .kos-select-input
-    width 100%
+  <style lang="stylus" scoped>
+  $BORDER_WIDTH = 1px
+  $DOUBLE_BORDER_WIDTH = 2 * $BORDER_WIDTH
+  $NEGATIVE_BORDER_WIDTH = -1 * $BORDER_WIDTH
+  $INPUT_BORDER_RADIUS = 4px
+
+  $SIZE_HEIGHT_SMALL = 24px
+  $SIZE_HEIGHT_MEDIUM = 32px
+  $SIZE_HEIGHT_LARGE = 40px
+
+  $SIZE_PADDING_SMALL = 2px
+  $SIZE_PADDING_MEDIUM = 3px
+  $SIZE_PADDING_LARGE = 4px
+
+  $SIZE_FONT_SMALL = 14px
+  $SIZE_FONT_MEDIUM = 14px
+  $SIZE_FONT_LARGE = 16px
+
+  .kos-select
+    position relative
     box-sizing border-box
-  .kos-select-list
-  .kos-select-list-fetching
-  .kos-select-list-error
-    position absolute
-    top 100%
-    left 0
-    min-width 100%
-    margin-top 3px
-    z-index 1
-  .kos-select-list-fetching
-  .kos-select-list-error
-    box-sizing border-box
-    border-radius 4px
-    border 1px solid #ccc
-  .kos-select-list-error
-    border-color red
-  .kos-select-tags-box
-    display inline-block
-    width 100%
-    height auto
-    padding 2px 4px
-    text-align left
-    border-radius 4px
-    box-sizing border-box
-    border 1px solid black
-    vertical-align middle
-    .kos-select-tag
-      display inline-block
-      border 1px solid black
-      border-radius 2px
-      margin 0 3px 0 0
-      padding 3px
-      &:last-child
-        margin 0
-      .kos-select-tag-remove-icon
-        // display inline-block
-        cursor pointer
-    input
-    .input
-      display inline-block
-      max-width 100%
-      width 30px
-      height 20px
-      border none
-      &:focus
+    border $BORDER_WIDTH solid #e8e8e8
+    border-radius $INPUT_BORDER_RADIUS
+    height $SIZE_HEIGHT_MEDIUM
+    &.kos-select-small
+      height $SIZE_HEIGHT_SMALL
+    &.kos-select-large
+      height $SIZE_HEIGHT_LARGE
+    .kos-select-input
+      position absolute
+      width "calc(100% + %s)" % $DOUBLE_BORDER_WIDTH
+      left $NEGATIVE_BORDER_WIDTH
+      top $NEGATIVE_BORDER_WIDTH
+      bottom $NEGATIVE_BORDER_WIDTH
+      box-sizing inherit
+      border inherit
+      border-radius inherit
+      text-align left
+      font-size $SIZE_FONT_MEDIUM
+      padding $SIZE_PADDING_MEDIUM 2 * $SIZE_PADDING_MEDIUM
+      transition all .3s cubic-bezier(.645,.045,.355,1)
+      &.kos-select-input-focused
+        border $BORDER_WIDTH solid #1890ff
+      &.kos-select-input-small
+        padding $SIZE_PADDING_SMALL 2 * $SIZE_PADDING_SMALL
+        font-size $SIZE_FONT_SMALL
+      &.kos-select-input-large
+        padding $SIZE_PADDING_LARGE 2 * $SIZE_PADDING_LARGE
+        font-size $SIZE_FONT_LARGE
+      &.kos-select-input-single
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+        text-transform none
         outline none
+      &.kos-select-input-multiple
+        display inline-block
+        .kos-select-tag
+          display inline-block
+          margin 0 3px 0 0
+          padding 3px
+          border-radius 3px
+          background #e8e8e8
+          &:last-child
+            margin 0
+          .kos-select-tag-remove-icon
+            // display inline-block
+            cursor pointer
+        input
+          display inline-block
+          max-width 100%
+          width 30px
+          height 20px
+          border none
+          &:focus
+            outline none
+    .kos-select-list
+      position absolute
+      top 100%
+      left $NEGATIVE_BORDER_WIDTH
+      min-width "calc(100% + %s)" % $DOUBLE_BORDER_WIDTH
+      margin-top 3px
+      z-index 1
+      background white
+      &.kos-select-list-fetching
+        box-sizing border-box
+        border-radius 4px
+        border 1px solid #ccc
+      &.kos-select-list-error
+        box-sizing border-box
+        border-radius 4px
+        border 1px solid #ccc
+        border-color red
 </style>

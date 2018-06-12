@@ -1,18 +1,18 @@
 <template>
-  <div>
-    <div>
-      <h3>list</h3>
+  <ol class="example-list">
+    <li class="example-list-item">
+      <strong>list</strong>
       <kos-select :items="items"></kos-select>
-    </div>
-    <div>
-      <h3>async list</h3>
+    </li>
+    <li class="example-list-item">
+      <strong>async list</strong>
       <kos-select :items="items" :async-items="asyncItems"></kos-select>
-    </div>
-    <div>
-      <h3>multiple selection list</h3>
+    </li>
+    <li class="example-list-item">
+      <strong>multiple selection list</strong>
       <kos-select :items="items" :multiple-selection="true"></kos-select>
-    </div>
-  </div>
+    </li>
+  </ol>
 </template>
 
 <script>
@@ -74,3 +74,11 @@ export default {
   },
 }
 </script>
+
+<style lang="stylus" scoped>
+.example-list
+  text-align left
+  .example-list-item
+    list-style-position inside
+    height 100px
+</style>

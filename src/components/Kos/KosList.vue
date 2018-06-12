@@ -16,7 +16,8 @@
       :tabindex="-1"
       :class="getItemClassObject(index)"
       @mouseenter="handleItemMouseEnter(index)"
-      @mousedown="handleItemMouseDown(index)"
+      @mousedown.left="handleItemMouseDownLeft(index)"
+      @mousedown.right="handleItemMouseDownRight"
       @keyup.enter="handleItemKeyupEnter"
       @keyup.up="handleItemKeyupUp(index)"
       @keyup.down="handleItemKeyupDown(index)"
@@ -84,8 +85,11 @@ export default {
     handleItemMouseEnter(index) {
       this.activeItemIndex = index
     },
-    handleItemMouseDown(index) {
+    handleItemMouseDownLeft(index) {
       this.selectItem(index)
+    },
+    handleItemMouseDownRight(e) {
+      e.preventDefault()
     },
     selectItem(index) {
       const selected = this.isItemSelected(index)
@@ -154,4 +158,5 @@ $ITEM_PADDING_LEFT_RIGHT = 2 * $ITEM_PADDING_TOP_BOT
       border 1px dashed yellow
     &.kos-list-item-selected
       background lightblue
+      font-weight bold
 </style>

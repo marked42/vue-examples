@@ -12,6 +12,7 @@
     <li
       v-else
       v-for="(item, index) in items"
+      v-show="!multipleSelection || !isItemSelected(index)"
       :key="item.label"
       :tabindex="-1"
       :class="getItemClassObject(index)"
@@ -54,6 +55,11 @@ export default {
       required: false,
       default: false,
     },
+    removeSelectedItem: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   model: {
     prop: 'selectedItemIndexes',
@@ -64,6 +70,11 @@ export default {
       activeItemIndex: -1,
       selectedItemIndexes: [],
     }
+  },
+  computed: {
+    selectedItems() {
+      return this.selectedItemIndexes.map(index => this.items[index])
+    },
   },
   methods: {
     isItemActive(index) {

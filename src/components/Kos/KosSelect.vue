@@ -4,13 +4,13 @@
     <input
       v-if="!multipleSelection"
       v-model="inputModel"
-      :class="selectInputSingleClass"
+      :class="selectInputSingleSelectionClass"
       @focus="handleInputFocus"
       @blur="handleInputBlur"
     >
     <div
       v-else
-      :class="selectInputTagsBoxClass"
+      :class="selectInputMultipleSelectionClass"
     >
       <div
         v-for="(item, index) in selectedItems"
@@ -122,14 +122,14 @@ export default {
         this.input = value
       },
     },
-    selectInputSingleClass() {
+    selectInputSingleSelectionClass() {
       return {
         'kos-select-input': true,
         'kos-select-input-single': true,
         'kos-select-input-focused': this.inputFocused,
       }
     },
-    selectInputTagsBoxClass() {
+    selectInputMultipleSelectionClass() {
       return {
         'kos-select-input': true,
         'kos-select-input-multiple': true,
@@ -255,8 +255,11 @@ export default {
       font-size $SIZE_FONT_MEDIUM
       padding $SIZE_PADDING_MEDIUM 2 * $SIZE_PADDING_MEDIUM
       transition all .3s cubic-bezier(.645,.045,.355,1)
+      &:hover
+        border $BORDER_WIDTH solid #1890ff
       &.kos-select-input-focused
         border $BORDER_WIDTH solid #1890ff
+        // TODO: box-shadow
       &.kos-select-input-small
         padding $SIZE_PADDING_SMALL 2 * $SIZE_PADDING_SMALL
         font-size $SIZE_FONT_SMALL

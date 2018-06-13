@@ -12,7 +12,7 @@
     <li
       v-else
       v-for="(item, index) in items"
-      v-show="!multipleSelection || !isItemSelected(index)"
+      v-show="isItemDisplayed(index)"
       :key="item.label"
       :tabindex="-1"
       :class="getItemClassObject(index)"
@@ -55,7 +55,7 @@ export default {
       required: false,
       default: false,
     },
-    removeSelectedItem: {
+    hideSelectedItem: {
       type: Boolean,
       required: false,
       default: false,
@@ -75,6 +75,50 @@ export default {
     selectedItems() {
       return this.selectedItemIndexes.map(index => this.items[index])
     },
+    unselectedItemIndexes() {
+      const unselectedItemIndexes = []
+
+      for (let i = 0; i < this.items.length; i++) {
+        if (!this.isItemSelected(i)) {
+          unselectedItemIndexes.push(i)
+        }
+      }
+
+      return unselectedItemIndexes
+    },
+    displayedItemIndexes() {
+      if (!this.multipleSelection) {
+        return this.items.map((item, index) => index)
+      }
+
+      return this.unselectedItemIndexes
+    },
+    firstDisplayedItemIndex() {
+      if (this.items.length === 0) {
+        return -1
+      }
+
+      if (!this.multipleSelection) {
+        return 0
+      }
+
+      return this.displayedItemIndexes.reduce((acc, displayedItemIndex) => {
+        return Math.min(acc, displayedItemIndex)
+      })
+    },
+    lastDisplayedItemIndex() {
+      if (this.items.length === 0) {
+        return -1
+      }
+
+      if (!this.multipleSelection) {
+        return this.items.length - 1
+      }
+
+      return this.displayedItemIndexes.reduce((acc, displayedItemIndex) => {
+        return Math.max(acc, displayedItemIndex)
+      })
+    },
   },
   methods: {
     isItemActive(index) {
@@ -83,11 +127,17 @@ export default {
     isItemSelected(index) {
       return this.selectedItemIndexes.includes(index)
     },
+    isItemDisplayed(index) {
+      return this.displayedItemIndexes.includes(index)
+    },
     getItemClassObject(index) {
       return {
         'kos-list-item': true,
         'kos-list-item-active': this.isItemActive(index),
         'kos-list-item-selected': this.isItemSelected(index),
+        'kos-list-item-displayed': this.isItemDisplayed(index),
+        'kos-list-item-displayed-first': this.firstDisplayedItemIndex === index,
+        'kos-list-item-displayed-last': this.lastDisplayedItemIndex === index,
       }
     },
     handleListMouseLeave() {
@@ -156,14 +206,22 @@ $ITEM_PADDING_LEFT_RIGHT = 2 * $ITEM_PADDING_TOP_BOT
     border 1px solid transparent
     &:focus
       outline none
-    &:first-child
-      border-radius $ITEM_BORDER_RADIUS $ITEM_BORDER_RADIUS 0 0
-    &:last-child
-      border-radius 0 0 $ITEM_BORDER_RADIUS $ITEM_BORDER_RADIUS
-    &:first-child:last-child
-      border-radius $ITEM_BORDER_RADIUS
-    &:nth-child(n+2):nth-last-child(n+2)
+    // &:first-child
+    //   border-radius $ITEM_BORDER_RADIUS $ITEM_BORDER_RADIUS 0 0
+    // &:last-child
+    //   border-radius 0 0 $ITEM_BORDER_RADIUS $ITEM_BORDER_RADIUS
+    // &:first-child:last-child
+    //   border-radius $ITEM_BORDER_RADIUS
+    // &:nth-child(n+2):nth-last-child(n+2)
+    //   border-radius 0
+    &.kos-list-item-displayed
       border-radius 0
+      &.kos-list-item-displayed-first
+        border-radius $ITEM_BORDER_RADIUS $ITEM_BORDER_RADIUS 0 0
+      &.kos-list-item-displayed-last
+        border-radius 0 0 $ITEM_BORDER_RADIUS $ITEM_BORDER_RADIUS
+      &.kos-list-item-displayed-first.kos-list-item-displayed-last
+        border-radius $ITEM_BORDER_RADIUS
     &.kos-list-item-active
       background lightgray
       border 1px dashed yellow

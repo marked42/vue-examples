@@ -5,15 +5,28 @@
       <button @click="size = 'large'">large</button>
       <button @click="size = 'medium'">medium</button>
       <button @click="size = 'small'">small</button>
-      <kos-select :items="items" :size="size"></kos-select>
+      <kos-select
+        :items="items"
+        :size="size"
+      >
+      </kos-select>
     </li>
     <li class="example-list-item">
       <strong>async list</strong>
-      <kos-select :items="items" :async-items="asyncItems"></kos-select>
+      <kos-select
+        :items="items"
+        :size="size"
+        :async-items="asyncItems"
+      >
+      </kos-select>
     </li>
     <li class="example-list-item">
       <strong>multiple selection list</strong>
-      <kos-select :items="items" :multiple-selection="true"></kos-select>
+      <kos-select
+        :items="items"
+        :multiple-selection="true"
+        :size="size"
+      ></kos-select>
     </li>
   </ol>
 </template>

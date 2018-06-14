@@ -1,8 +1,12 @@
 <template>
-  <div :class="selectClass">
+  <div
+    :class="selectClass"
+    @click="handleSelectClick"
+  >
     <!-- kos-select-input -->
     <template v-if="!multipleSelection">
       <input
+        ref="input"
         v-model="inputModel"
         :class="selectInputSingleClass"
         @focus="handleInputFocus"
@@ -23,6 +27,7 @@
       </div>
       <input
         :class="selectInputMultipleClass"
+        ref="input"
         @focus="handleInputFocus"
         @blur="handleInputBlur"
       >
@@ -95,6 +100,11 @@ export default {
         return ['large', 'medium', 'small', 'default'].includes(value)
       },
     },
+    showSearch: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
@@ -144,6 +154,7 @@ export default {
         'kos-select-focused': this.inputFocused,
         'kos-select-large': this.isLarge,
         'kos-select-small': this.isSmall,
+        'kos-select-show-search': this.showSearch,
       }
     },
     selectInputSingleClass() {
@@ -227,6 +238,9 @@ export default {
         this.selectedItemIndexes = []
       })
     },
+    handleSelectClick() {
+      this.$refs.input.focus()
+    },
     handleInputFocus() {
       this.inputFocused = true
     },
@@ -273,6 +287,10 @@ $SIZE_FONT_SMALL = 14px
 $SIZE_FONT_MEDIUM = 14px
 $SIZE_FONT_LARGE = 16px
 
+$SELECT_WIDTH_SMALL = 200px
+$SELECT_WIDTH_MEDIUM = 300px
+$SELECT_WIDTH_LARGE = 400px
+
 .kos-select
   position relative
   display inline-block
@@ -282,13 +300,25 @@ $SIZE_FONT_LARGE = 16px
   min-height $SIZE_HEIGHT_MEDIUM
   padding 0 $SIZE_GAP_X_MEDIUM
   transition all .3s cubic-bezier(.645,.045,.355,1)
+  font-size $SIZE_FONT_MEDIUM
+  width $SELECT_WIDTH_MEDIUM
+  line-height $SIZE_HEIGHT_MEDIUM - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_MEDIUM
   cursor pointer
+  cursor text
+  &.kos-select-show-search
+    cursor text
   &.kos-select-small
     min-height $SIZE_HEIGHT_SMALL
+    width $SELECT_WIDTH_SMALL
     padding 0 $SIZE_GAP_X_SMALL
+    font-size $SIZE_FONT_SMALL
+    line-height $SIZE_HEIGHT_SMALL - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_SMALL
   &.kos-select-large
     min-height $SIZE_HEIGHT_LARGE
+    width $SELECT_WIDTH_LARGE
     padding 0 $SIZE_GAP_X_LARGE
+    font-size $SIZE_FONT_LARGE
+    line-height $SIZE_HEIGHT_LARGE - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_LARGE
   &:hover
     border $BORDER_WIDTH solid #1890ff
   // &.kos-select-focused
@@ -301,11 +331,16 @@ $SIZE_FONT_LARGE = 16px
     //   padding $SIZE_PADDING_LARGE 2 * $SIZE_PADDING_LARGE
     //   font-size $SIZE_FONT_LARGE
   .kos-select-input
+    display inline-block
     border none
     outline none
     text-align left
-    width "calc(100% - %s)" % $ICON_SIZE
+    padding 0
+    max-width 100%
+    font-size inherit
+    line-height inherit
   .kos-select-input-arrow
+    cursor pointer
     &:before
       // TODO: unicode support ?
       // content "\E61D"
@@ -317,33 +352,33 @@ $SIZE_FONT_LARGE = 16px
       width 12px
       height 12px
   .kos-select-input-single
-    padding 0
     margin $SIZE_GAP_Y_MEDIUM 0
-    font-size $SIZE_FONT_MEDIUM
-    line-height $SIZE_HEIGHT_MEDIUM - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_MEDIUM
+    width "calc(100% - %s)" % $ICON_SIZE
     &.kos-select-input-single-small
       margin $SIZE_GAP_Y_SMALL 0
-      font-size $SIZE_FONT_SMALL
-      line-height $SIZE_HEIGHT_SMALL - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_SMALL
     &.kos-select-input-single-large
       margin $SIZE_GAP_Y_LARGE 0
-      font-size $SIZE_FONT_LARGE
-      line-height $SIZE_HEIGHT_LARGE - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_LARGE
-    // position absolute
-    // width "calc(100% + %s)" % $DOUBLE_BORDER_WIDTH
-    // left $NEGATIVE_BORDER_WIDTH
-    // top $NEGATIVE_BORDER_WIDTH
-    // bottom $NEGATIVE_BORDER_WIDTH
-    // box-sizing inherit
-    // border inherit
-    // border-radius inherit
-    // padding $SIZE_PADDING_MEDIUM 2 * $SIZE_PADDING_MEDIUM
-  //   .kos-select-input-single
-  //     white-space nowrap
-  //     overflow hidden
-  //     text-overflow ellipsis
-  //     text-transform none
-  //     outline none
+  .kos-select-tag
+    display inline-block
+    box-sizing border-box
+    background gray
+    border-radius 4px
+    padding 2px 4px
+    margin $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM 0
+    height $SIZE_HEIGHT_MEDIUM - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_MEDIUM
+    // &.kos-select-tag-small
+    //   margin $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL 0
+    // &.kos-select-tag-large
+    //   margin $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE 0
+  .kos-select-input-multiple
+    margin $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM 0
+    width 1em
+    &.kos-select-input-multiple-small
+      margin $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL 0
+    &.kos-select-input-multiple-large
+      margin $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE 0
+    // &.kos-select-tag-small
+    // &.kos-select-tag-large
   //   .kos-select-input-multiple
   //     display inline-block
   //     .kos-select-tag

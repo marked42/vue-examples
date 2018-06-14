@@ -2,7 +2,10 @@
   <ol class="example-list">
     <li class="example-list-item">
       <strong>list</strong>
-      <kos-select :items="items"></kos-select>
+      <button @click="size = 'large'">large</button>
+      <button @click="size = 'medium'">medium</button>
+      <button @click="size = 'small'">small</button>
+      <kos-select :items="items" :size="size"></kos-select>
     </li>
     <li class="example-list-item">
       <strong>async list</strong>
@@ -25,6 +28,7 @@ export default {
   },
   data() {
     return {
+      size: 'large',
       items: [
         {
           label: '1',

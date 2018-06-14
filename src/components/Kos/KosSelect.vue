@@ -1,18 +1,19 @@
 <template>
   <div :class="selectClass">
     <!-- kos-select-input -->
-    <input
-      v-if="!multipleSelection"
-      v-model="inputModel"
-      class="'kos-select-input-single'"
-      @focus="handleInputFocus"
-      @blur="handleInputBlur"
-    >
+    <template v-if="!multipleSelection">
+      <input
+        v-model="inputModel"
+        :class="selectInputSingleClass"
+        @focus="handleInputFocus"
+        @blur="handleInputBlur"
+      ><span class="kos-select-input-arrow"></span>
+    </template>
     <template v-else>
       <div
         v-for="(item, index) in selectedItems"
         :key="item.label"
-        class="kos-select-tag"
+        :class="selectTagsClass"
       >
         {{item.label}}
         <span
@@ -21,7 +22,7 @@
         >×</span>
       </div>
       <input
-        class="kos-select-input-tag"
+        :class="selectInputMultipleClass"
         @focus="handleInputFocus"
         @blur="handleInputBlur"
       >
@@ -89,7 +90,7 @@ export default {
     size: {
       type: String,
       required: false,
-      default: 'large',
+      default: 'medium',
       validator(value) {
         return ['large', 'medium', 'small', 'default'].includes(value)
       },
@@ -131,26 +132,41 @@ export default {
         this.input = value
       },
     },
+    isLarge() {
+      return this.size === 'large'
+    },
+    isSmall() {
+      return this.size === 'small'
+    },
     selectClass() {
       return {
         'kos-select': true,
         'kos-select-focused': this.inputFocused,
-        'kos-select-large': this.size === 'large',
-        'kos-select-small': this.size === 'small',
+        'kos-select-large': this.isLarge,
+        'kos-select-small': this.isSmall,
       }
     },
-    selectInputSingleSelectionClass() {
+    selectInputSingleClass() {
       return {
         'kos-select-input': true,
         'kos-select-input-single': true,
-        'kos-select-input-focused': this.inputFocused,
+        'kos-select-input-single-large': this.isLarge,
+        'kos-select-input-single-small': this.isSmall,
       }
     },
-    selectInputMultipleSelectionClass() {
+    selectTagsClass() {
+      return {
+        'kos-select-tag': true,
+        'kos-select-tag-large': this.isLarge,
+        'kos-select-tag-small': this.isSmall,
+      }
+    },
+    selectInputMultipleClass() {
       return {
         'kos-select-input': true,
         'kos-select-input-multiple': true,
-        'kos-select-input-focused': this.inputFocused,
+        'kos-select-input-multiple-large': this.isLarge,
+        'kos-select-input-multiple-small': this.isSmall,
       }
     },
     selectedItem() {
@@ -237,19 +253,21 @@ $DOUBLE_BORDER_WIDTH = 2 * $BORDER_WIDTH
 $NEGATIVE_BORDER_WIDTH = -1 * $BORDER_WIDTH
 
 $SELECT_BORDER_RADIUS = 4px
-$TAG_BORDER_RADIUS
+$TAG_BORDER_RADIUS = 4px
 
 $SIZE_HEIGHT_SMALL = 24px
 $SIZE_HEIGHT_MEDIUM = 32px
 $SIZE_HEIGHT_LARGE = 40px
 
-$SIZE_PADDING_Y_SMALL = 2px
-$SIZE_PADDING_Y_MEDIUM = 3px
-$SIZE_PADDING_Y_LARGE = 4px
+$SIZE_GAP_Y_SMALL = 2px
+$SIZE_GAP_Y_MEDIUM = 3px
+$SIZE_GAP_Y_LARGE = 4px
 
-$SIZE_PADDING_X_SMALL = $SIZE_PADDING_Y_SMALL * 2
-$SIZE_PADDING_X_MEDIUM = $SIZE_PADDING_Y_MEDIUM * 2
-$SIZE_PADDING_X_LARGE = $SIZE_PADDING_Y_LARGE * 2
+$SIZE_GAP_X_SMALL = $SIZE_GAP_Y_SMALL * 2
+$SIZE_GAP_X_MEDIUM = $SIZE_GAP_Y_MEDIUM * 2
+$SIZE_GAP_X_LARGE = $SIZE_GAP_Y_LARGE * 2
+
+$ICON_SIZE = 12px
 
 $SIZE_FONT_SMALL = 14px
 $SIZE_FONT_MEDIUM = 14px
@@ -261,17 +279,16 @@ $SIZE_FONT_LARGE = 16px
   box-sizing border-box
   border $BORDER_WIDTH solid #e8e8e8
   border-radius $SELECT_BORDER_RADIUS
-  min-height 24px
-  padding 0 6px
-  // min-height $SIZE_HEIGHT_MEDIUM
-  // padding 0 $SIZE_PADDING_X_MEDIUM
+  min-height $SIZE_HEIGHT_MEDIUM
+  padding 0 $SIZE_GAP_X_MEDIUM
   transition all .3s cubic-bezier(.645,.045,.355,1)
-  // &.kos-select-small
-  //   min-height $SIZE_HEIGHT_SMALL
-  //   padding 0 $SIZE_PADDING_X_SMALL
-  // &.kos-select-large
-  //   min-height $SIZE_HEIGHT_LARGE
-  //   padding 0 $SIZE_PADDING_X_LARGE
+  cursor pointer
+  &.kos-select-small
+    min-height $SIZE_HEIGHT_SMALL
+    padding 0 $SIZE_GAP_X_SMALL
+  &.kos-select-large
+    min-height $SIZE_HEIGHT_LARGE
+    padding 0 $SIZE_GAP_X_LARGE
   &:hover
     border $BORDER_WIDTH solid #1890ff
   // &.kos-select-focused
@@ -283,9 +300,35 @@ $SIZE_FONT_LARGE = 16px
     // &.kos-select-input-large
     //   padding $SIZE_PADDING_LARGE 2 * $SIZE_PADDING_LARGE
     //   font-size $SIZE_FONT_LARGE
-  .kos-select-input-single
-    margin 0
+  .kos-select-input
+    border none
     outline none
+    text-align left
+    width "calc(100% - %s)" % $ICON_SIZE
+  .kos-select-input-arrow
+    &:before
+      // TODO: unicode support ?
+      // content "\E61D"
+      content "+"
+      display inline-block
+      position absolute
+      top 50%
+      transform translateY(-50%)
+      width 12px
+      height 12px
+  .kos-select-input-single
+    padding 0
+    margin $SIZE_GAP_Y_MEDIUM 0
+    font-size $SIZE_FONT_MEDIUM
+    line-height $SIZE_HEIGHT_MEDIUM - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_MEDIUM
+    &.kos-select-input-single-small
+      margin $SIZE_GAP_Y_SMALL 0
+      font-size $SIZE_FONT_SMALL
+      line-height $SIZE_HEIGHT_SMALL - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_SMALL
+    &.kos-select-input-single-large
+      margin $SIZE_GAP_Y_LARGE 0
+      font-size $SIZE_FONT_LARGE
+      line-height $SIZE_HEIGHT_LARGE - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_LARGE
     // position absolute
     // width "calc(100% + %s)" % $DOUBLE_BORDER_WIDTH
     // left $NEGATIVE_BORDER_WIDTH
@@ -294,8 +337,6 @@ $SIZE_FONT_LARGE = 16px
     // box-sizing inherit
     // border inherit
     // border-radius inherit
-    text-align left
-    font-size $SIZE_FONT_MEDIUM
     // padding $SIZE_PADDING_MEDIUM 2 * $SIZE_PADDING_MEDIUM
   //   .kos-select-input-single
   //     white-space nowrap

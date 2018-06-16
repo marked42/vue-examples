@@ -52,7 +52,7 @@
     </div>
     <kos-list
       v-else
-      v-show="inputFocused"
+      :show="inputFocused"
       v-model="selectedItemIndexes"
       :items="listItems"
       class="kos-select-list"

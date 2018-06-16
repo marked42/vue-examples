@@ -1,6 +1,7 @@
 <template>
   <ul
     class="kos-list"
+    v-show="show && displayedItemIndexes.length > 0"
     @mouseleave="handleListMouseLeave"
   >
     <li v-if="items.length === 0">
@@ -60,6 +61,11 @@ export default {
       required: false,
       default: false,
     },
+    show: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   model: {
     prop: 'selectedItemIndexes',
@@ -94,7 +100,7 @@ export default {
       return this.unselectedItemIndexes
     },
     firstDisplayedItemIndex() {
-      if (this.items.length === 0) {
+      if (this.displayedItemIndexes.length === 0) {
         return -1
       }
 
@@ -107,7 +113,7 @@ export default {
       })
     },
     lastDisplayedItemIndex() {
-      if (this.items.length === 0) {
+      if (this.displayedItemIndexes.length === 0) {
         return -1
       }
 

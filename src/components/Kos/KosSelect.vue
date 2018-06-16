@@ -26,8 +26,10 @@
         >×</span>
       </div>
       <input
-        :class="selectInputMultipleClass"
         ref="input"
+        v-model="inputModel"
+        :class="selectInputMultipleClass"
+        :style="selectInputMultipleStyle"
         @focus="handleInputFocus"
         @blur="handleInputBlur"
       >
@@ -136,7 +138,7 @@ export default {
           return this.input
         }
 
-        return !this.multipleSelection ? this.selectedItem.label : this.selectedItems
+        return !this.multipleSelection ? this.selectedItem.label : ''
       },
       set(value) {
         this.input = value
@@ -179,6 +181,10 @@ export default {
         'kos-select-input-multiple-large': this.isLarge,
         'kos-select-input-multiple-small': this.isSmall,
       }
+    },
+    selectInputMultipleStyle() {
+      // TODO: calculate length of characters with fixed font-size and content, em is not accurate
+      return `width: ${Math.max(1, this.input.length)}em;`
     },
     selectedItem() {
       const defaultItem = { label: '', value: undefined }
@@ -298,13 +304,13 @@ $SELECT_WIDTH_LARGE = 400px
   border $BORDER_WIDTH solid #e8e8e8
   border-radius $SELECT_BORDER_RADIUS
   min-height $SIZE_HEIGHT_MEDIUM
-  padding 0 $SIZE_GAP_X_MEDIUM
-  transition all .3s cubic-bezier(.645,.045,.355,1)
-  font-size $SIZE_FONT_MEDIUM
   width $SELECT_WIDTH_MEDIUM
+  padding 0 $SIZE_GAP_X_MEDIUM
+  font-size $SIZE_FONT_MEDIUM
   line-height $SIZE_HEIGHT_MEDIUM - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_MEDIUM
-  cursor pointer
+  // cursor pointer
   cursor text
+  transition all .3s cubic-bezier(.645,.045,.355,1)
   &.kos-select-show-search
     cursor text
   &.kos-select-small
@@ -366,10 +372,12 @@ $SELECT_WIDTH_LARGE = 400px
     padding 2px 4px
     margin $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM 0
     height $SIZE_HEIGHT_MEDIUM - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_MEDIUM
-    // &.kos-select-tag-small
-    //   margin $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL 0
-    // &.kos-select-tag-large
-    //   margin $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE 0
+    &.kos-select-tag-small
+      margin $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL 0
+      height $SIZE_HEIGHT_SMALL - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_SMALL
+    &.kos-select-tag-large
+      margin $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE 0
+      height $SIZE_HEIGHT_LARGE - 2 * $BORDER_WIDTH - 2 * $SIZE_GAP_Y_LARGE
   .kos-select-input-multiple
     margin $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM $SIZE_GAP_Y_MEDIUM 0
     width 1em

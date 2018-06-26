@@ -11,7 +11,7 @@
         :class="selectInputSingleClass"
         @focus="handleInputFocus"
         @blur="handleInputBlur"
-      ><span class="kos-select-input-arrow"></span>
+      ><span class="kos-select-input-arrow">+</span>
     </template>
     <template v-else>
       <div
@@ -347,16 +347,19 @@ $SELECT_WIDTH_LARGE = 400px
     line-height inherit
   .kos-select-input-arrow
     cursor pointer
-    &:before
-      // TODO: unicode support ?
-      // content "\E61D"
-      content "+"
-      display inline-block
-      position absolute
-      top 50%
-      transform translateY(-50%)
-      width 12px
-      height 12px
+    width 12px
+    height 12px
+    line-height 12px
+    // &:before
+    //   // TODO: unicode support ?
+    //   // content "\E61D"
+    //   content "+"
+    //   display inline-block
+    //   position absolute
+    //   top 50%
+    //   transform translateY(-50%)
+    //   width 12px
+    //   height 12px
   .kos-select-input-single
     margin $SIZE_GAP_Y_MEDIUM 0
     width "calc(100% - %s)" % $ICON_SIZE
@@ -385,29 +388,6 @@ $SELECT_WIDTH_LARGE = 400px
       margin $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL $SIZE_GAP_Y_SMALL 0
     &.kos-select-input-multiple-large
       margin $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE $SIZE_GAP_Y_LARGE 0
-    // &.kos-select-tag-small
-    // &.kos-select-tag-large
-  //   .kos-select-input-multiple
-  //     display inline-block
-  //     .kos-select-tag
-  //       display inline-block
-  //       margin 0 3px 0 0
-  //       padding 3px
-  //       border-radius 3px
-  //       background #e8e8e8
-  //       &:last-child
-  //         margin 0
-  //       .kos-select-tag-remove-icon
-  //         // display inline-block
-  //         cursor pointer
-  //     input
-  //       display inline-block
-  //       max-width 100%
-  //       width 30px
-  //       height 20px
-  //       border none
-  //       &:focus
-  //         outline none
   .kos-select-list
     position absolute
     top 100%

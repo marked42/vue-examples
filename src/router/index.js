@@ -10,6 +10,8 @@ import WatchComputed from '@/components/Vue/WatchComputed'
 import WordBreak from '@/components/WordBreak'
 import TouchEvents from '@/components/TouchEvents'
 import CssCounters from '@/components/CssCounters'
+import TextEditor from '@/components/TextEditor'
+import Parent from '@/components/Model/Parent'
 
 Vue.use(Router)
 
@@ -18,8 +20,18 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      redirect: { name: 'CssCounters' },
+      redirect: { name: 'Model' },
       component: HelloWorld,
+    },
+    {
+      path: '/model',
+      name: 'Model',
+      component: Parent,
+    },
+    {
+      path: '/text_editor',
+      name: 'TextEditor',
+      component: TextEditor,
     },
     {
       path: '/word_break',
@@ -68,3 +80,17 @@ export default new Router({
     },
   ],
 })
+
+function PromiseOne(...promises) {
+  return new Promise((resolve, reject) => {
+    promises.forEach(promise => promise
+      .then(value => resolve(value))
+      .catch())
+  })
+}
+
+function checkPrivileges(privileges) {
+  const promises = privileges.map(privilege => this.$auth.permission.hasPermission(privilege))
+
+  return PromiseOne(promises)
+}
